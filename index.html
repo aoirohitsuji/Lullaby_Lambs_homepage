@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ラララム | 増えて眠らす、羊の大冒険</title>
+    
+    <!-- フォント: Zen Maru Gothic (丸みがありつつ洗練されたフォント) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/jpeg" href="assets/images/app_icon.jpg">
+    
+    <!-- アイコン: FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- 変数定義 --- */
+        :root {
+            --c-bg: #FFFBF0;       /* 背景：羊毛のような温かいクリーム色 */
+            --c-text: #5D5550;     /* 文字：柔らかい焦げ茶色 */
+            --c-primary: #8CD790;  /* メイン：草原のグリーン */
+            --c-accent: #FF8B94;   /* アクセント：優しいピンク */
+            --c-night: #4A586E;    /* 悪夢/夜：夜空のネイビー */
+            --c-sub: #A8D8EA;      /* サブ：空色 */
+            --c-white: #ffffff;
+            
+            --shadow-soft: 0 10px 30px -5px rgba(93, 85, 80, 0.1);
+            --shadow-float: 0 20px 40px -10px rgba(93, 85, 80, 0.15);
+            
+            --radius-l: 30px;
+            --radius-m: 20px;
+            --radius-s: 12px;
+        }
+
+        /* --- 基本設定 --- */
+        body {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+            overflow-x: hidden;
+            /* 背景に薄いグリッドとドットで質感を追加 */
+            background-image: 
+                radial-gradient(var(--c-primary) 1px, transparent 1px),
+                radial-gradient(var(--c-primary) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+            background-attachment: fixed;
+            opacity: 0.98; /* 背景パターンを少し薄く */
+        }
+
+        a { text-decoration: none; color: inherit; transition: all 0.3s; }
+        ul { list-style: none; padding: 0; }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- 波型セクション区切り --- */
+        .wave-divider {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            transform: rotate(180deg);
+        }
+        .wave-divider svg {
+            position: relative;
+            display: block;
+            width: calc(136% + 1.3px);
+            height: 60px;
+        }
+        .wave-divider .shape-fill { fill: var(--c-white); }
+        
+        .wave-top { top: -1px; bottom: auto; transform: rotate(0); }
+        .bg-white { background-color: var(--c-white); position: relative; }
+
+        /* --- ヘッダー (FV) --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 100px 0;
+            box-sizing: border-box;
+            background-size: cover;
+            background-position: center center;
+            /* Hero background from official flutter assets */
+            background-image: url('assets/images/top_page.jpg');
+        }
+
+
+        /* 背景装飾 */
+        .hero-bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: pulse 8s infinite alternate;
+        }
+
+        /* Ensure hero text sits above background image */
+        .hero-content { position: relative; z-index: 2; }
+        .c1 { width: 500px; height: 500px; background: #E0F7FA; top: -10%; left: -10%; }
+        .c2 { width: 400px; height: 400px; background: #F1F8E9; bottom: 10%; right: -5%; animation-delay: 2s; }
+        .c3 { width: 200px; height: 200px; background: #FFF0F5; top: 20%; right: 10%; animation-delay: 4s; }
+
+        .tagline {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 24px;
+            border-radius: 50px;
+            color: var(--c-primary);
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 2px solid var(--c-primary);
+        }
+
+        h1.title {
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            font-weight: 900;
+            line-height: 1;
+            margin: 0 0 20px 0;
+            color: var(--c-text);
+            text-shadow: 0 6px 18px rgba(0,0,0,0.22);
+            z-index: 2;
+        }
+
+        /* hero overlay removed to restore original image brightness */
+        .hero-desc {
+            font-size: 1.2rem;
+            color: var(--c-text);
+            margin-bottom: 50px;
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 2;
+            /* translucent card behind text to preserve background while improving contrast */
+            background: rgba(255,255,255,0.88);
+            padding: 16px 20px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px -8px rgba(0,0,0,0.25);
+            display: inline-block;
+        }
+
+        /* --- ボタンエリア --- */
+        .action-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 18px 40px;
+            border-radius: 100px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 8px 20px -5px rgba(0,0,0,0.15);
+            box-sizing: border-box;
+        }
+
+        .btn:focus {
+            outline: 3px solid var(--c-primary);
+            outline-offset: 3px;
+        }
+
+        /* Androidボタン (推奨) */
+        .btn-android {
+            background-color: var(--c-accent);
+            color: white;
+            font-size: 1.2rem;
+            min-width: 280px;
+            border-bottom: 4px solid #E57373; /* 立体感 */
+        }
+        .btn-android:hover { transform: translateY(2px); border-bottom-width: 2px; margin-top: 2px; }
+        .btn-android::after {
+            content: 'RECOMMENDED';
+            position: absolute;
+            top: 5px;
+            right: -30px;
+            background: #FFEB3B;
+            color: #333;
+            font-size: 0.6rem;
+            padding: 2px 30px;
+            transform: rotate(45deg);
+            font-weight: bold;
+        }
+
+        /* Web版 & 企画書ボタン */
+        .btn-sub {
+            background-color: var(--c-white);
+            color: var(--c-text);
+            border: 2px solid #ddd;
+            /* Make sub buttons wider to match the Android button for visual balance */
+            min-width: 280px;
+            /* allow stacked label + small note inside the button */
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 14px 24px;
+            text-align: center;
+        }
+        .btn-sub:hover {
+            border-color: var(--c-primary);
+            color: var(--c-primary);
+            transform: translateY(-3px);
+        }
+
+        .note-text {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 8px;
+            display: block;
+            text-align: center;
+            gap: 5px;
+        }
+
+        /* small inline note inside sub buttons */
+        .note-inline {
+            font-size: 0.78rem;
+            color: #7a706a;
+            opacity: 0.95;
+            display: block;
+            margin-top: 4px;
+            line-height: 1.1;
+        }
+
+        /* wrapper for sub button + note to control width and alignment */
+        .btn-sub-wrap { display:flex; flex-direction:column; align-items:center; }
+
+        /* Desktop: force buttons to equal widths for visual consistency */
+        @media (min-width: 769px) {
+            .btn { width: 320px; }
+            .btn-sub-wrap { width: 320px; }
+        }
+        /* Mobile: let buttons be full width when stacked */
+        @media (max-width: 768px) {
+            .btn { width: 100%; }
+            .btn-sub-wrap { width: 100%; }
+        }
+
+        /* --- セクション共通 --- */
+        section { padding: 120px 0; }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            color: var(--c-night);
+            margin-bottom: 80px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .section-title::before {
+            content: attr(data-en);
+            display: block;
+            font-size: 1rem;
+            color: var(--c-primary);
+            letter-spacing: 0.2em;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--c-accent);
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        /* --- Concept --- */
+        .concept-box {
+            background: var(--c-white);
+            border-radius: var(--radius-l);
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: var(--shadow-float);
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .concept-text { font-size: 1.2rem; margin-top: 30px; }
+        
+        /* --- How to Play --- */
+        .step-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+        .step-card {
+            background: var(--c-white);
+            padding: 40px 30px;
+            border-radius: var(--radius-l);
+            text-align: center;
+            position: relative;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.4s ease;
+        }
+        .step-card:hover { transform: translateY(-10px); }
+        
+        .step-badge {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--c-night);
+            color: white;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            font-weight: 900;
+            border: 4px solid var(--c-bg);
+        }
+        .step-img { font-size: 4rem; margin: 20px 0; display: block; }
+        .step-card h3 { font-size: 1.4rem; color: var(--c-primary); margin-bottom: 15px; }
+
+        /* --- Characters --- */
+        .char-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 25px;
+            padding: 20px 10px 40px; /* スクロールバーと影のために下部に余白 */
+            scrollbar-width: none; /* Firefox */
+        }
+        .char-scroll::-webkit-scrollbar { display: none; } /* Chrome */
+        
+        .char-card {
+            flex: 0 0 240px;
+            background: var(--c-white);
+            border-radius: var(--radius-m);
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        .char-card:hover {
+            transform: translateY(-10px) rotate(2deg);
+            border-color: var(--c-primary);
+            box-shadow: var(--shadow-float);
+        }
+        .char-visual {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            background: #f4f4f4;
+        }
+        /* キャラごとの色 */
+        .char-card:nth-child(1) .char-visual { background: #E8F5E9; }
+        .char-card:nth-child(2) .char-visual { background: #E3F2FD; }
+        .char-card:nth-child(3) .char-visual { background: #FFEBEE; }
+        .char-card:nth-child(4) .char-visual { background: #F3E5F5; }
+        .char-card:nth-child(5) .char-visual { background: #FFF8E1; }
+        
+        .char-info { padding: 20px; text-align: center; }
+        .char-name { display: block; font-weight: 900; font-size: 1.2rem; margin-bottom: 5px; }
+        .char-desc { font-size: 0.9rem; color: #888; }
+
+        /* --- Visual gallery (stacked vertical slides) --- */
+        .visual-section { padding: 0; }
+        .visual-gallery {
+            display: block; /* flow with the page like other sections */
+        }
+        .visual-slide {
+            padding: 60px 0;
+            min-height: 60vh; /* large, but allows natural vertical flow */
+            background-size: cover;
+            background-position: center center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .visual-overlay {
+            position: absolute;
+            inset: 0;
+            /* subtle texture to lift captions; low contrast so image remains vibrant */
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.04));
+            pointer-events: none;
+        }
+        .visual-caption {
+            position: relative;
+            z-index: 2;
+            background: rgba(255,255,255,0.92);
+            padding: 12px 18px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px -8px rgba(0,0,0,0.18);
+            font-weight: 700;
+            color: var(--c-text);
+            max-width: 80%;
+            text-align: center;
+        }
+          /* Visual-specific dividers: make separators look intentional and polished */
+          .visual-section .wave-divider { position: relative; margin-top: -48px; z-index: 3; pointer-events: none; }
+          /* Make SVG slightly taller so it can overlap the image area smoothly */
+          .visual-section .wave-divider svg { display:block; width:100%; height:100px; }
+          /* Fill the wave with a near-opaque white so it visually cuts into the image
+              Note: using rgba keeps some subtle softness over bright images */
+          .visual-section .wave-divider .shape-fill { fill: rgba(255,255,255,0.95); }
+          .visual-section .wave-divider svg { filter: drop-shadow(0 -10px 16px rgba(0,0,0,0.06)); }
+          /* Ensure slides sit behind the divider so the wave appears on top */
+          .visual-slide { position: relative; z-index: 1; overflow: visible; }
+          /* Hide captions (removed in markup) if any remain */
+          .visual-caption { display: none; }
+        /* small decorative variant for very wide screens */
+        @media (min-width: 1000px) {
+            .visual-slide { min-height: 70vh; }
+            .visual-caption { max-width: 50%; }
+        }
+
+        /* --- Developers --- */
+        .dev-wrapper {
+            background: var(--c-white);
+            border-radius: 50px;
+            padding: 80px 40px;
+            box-shadow: var(--shadow-float);
+        }
+        .dev-grid {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            flex-wrap: wrap;
+        }
+        .dev-person { text-align: center; }
+        .dev-icon {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background-color: #eee;
+            margin: 0 auto 25px;
+            border: 5px solid var(--c-bg);
+            box-shadow: 0 0 0 2px var(--c-primary);
+            background-size: cover;
+            background-position: center;
+        }
+        .dev-role {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--c-primary);
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 0.05em;
+        }
+        .dev-name {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+        .twitter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #000;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .twitter-btn:hover { opacity: 0.8; transform: scale(1.05); }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 60px 0;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* アニメーション */
+        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+
+        @media (max-width: 768px) {
+            h1.title { font-size: 3.5rem; }
+            .btn-group { flex-direction: column; width: 100%; }
+            .btn { width: 100%; box-sizing: border-box; }
+            .dev-grid { gap: 40px; }
+            .char-scroll { flex-wrap: nowrap; /* スマホは横スクロール */ }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <!-- 背景装飾 -->
+        <div class="hero-bg-circle c1"></div>
+        <div class="hero-bg-circle c2"></div>
+        <div class="hero-bg-circle c3"></div>
+
+        <div class="container hero-content">
+            <div class="tagline">✨ 可愛いイラストのローグライクカードゲーム</div>
+            <h1 class="title">ラララム</h1>
+            <p class="hero-desc">
+                羊の大冒険がはじまる。<br>
+                毎夜変化する夢の世界で、悪夢に立ち向かおう。
+            </p>
+            
+            <div class="action-area">
+                <!-- ボタン群 -->
+                <div class="btn-group">
+                    
+                    <!-- 1. Android APK (メイン) -->
+                    <!-- リンクは後で設定: href="ここにAPKのURL" -->
+                    <a href="../official_version/builds/lullaby_lambs.apk" class="btn btn-android" aria-label="Android 体験版 APK をダウンロード">
+                        <i class="fa-brands fa-android"></i>
+                        体験版APK
+                    </a>
+
+                    <!-- 2. Web版 (サブ) -->
+                    <!-- リンクは後で設定: href="ここにWeb版のURL" -->
+                    <div class="btn-sub-wrap">
+                        <a href="../official_version/web/index.html" class="btn btn-sub" aria-label="ブラウザで遊ぶ（非推奨）">
+                            <span style="display:flex;align-items:center;gap:10px;">
+                                <i class="fa-solid fa-gamepad"></i>
+                                <span>ブラウザで遊ぶ</span>
+                            </span>
+                            <span class="note-inline"><i class="fa-solid fa-triangle-exclamation" style="margin-right:6px;"></i>動作が重い場合があります</span>
+                        </a>
+                    </div>
+
+                    <!-- 3. 企画書 (サブ) -->
+                    <!-- リンクは後で設定: href="ここにPDFのURL" -->
+                    <a href="plan.html" class="btn btn-sub" aria-label="企画書を見る">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        企画書を見る
+                    </a>
+
+                </div>
+            </div>
+            
+            <!-- メインビジュアル領域（公式アセットのアイコンを表示） -->
+            <div style="position: relative; margin-top: 40px;">
+                <img src="assets/images/app_icon.jpg" loading="lazy" alt="Rararamu Icon" style="width:220px;height:auto;border-radius:22px;box-shadow:var(--shadow-float);">
+            </div>
+        </div>
+
+        <!-- 波型の区切り線 -->
+        <div class="wave-divider">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- コンセプト -->
+    <section id="about" class="bg-white">
+        <div class="container">
+            <h2 class="section-title" data-en="CONCEPT">ラララムとは？</h2>
+            <div class="concept-box">
+                <div style="font-size: 4rem; margin-bottom: -20px; position: relative; top: -40px;">📖</div>
+                <h3>増えて眠らす、夢の防衛戦。</h3>
+                <p class="concept-text">
+                    規定の数字を数えると眠りにつく強大な悪夢。<br>
+                    あなたは羊の「分身」能力を駆使して、その悪夢に挑みます。<br>
+                    <br>
+                    可愛いイラストとは裏腹に、戦略が問われる<br>
+                    新感覚ローグライクカードゲームです。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ゲームの流れ -->
+    <section id="flow">
+        <div class="container">
+            <h2 class="section-title" data-en="HOW TO PLAY">ゲームの流れ</h2>
+            <div class="step-list">
+                <div class="step-card">
+                    <div class="step-badge">1</div>
+                    <span class="step-img">🃏</span>
+                    <h3>分身を増やす</h3>
+                    <p>カードを使って、<br>羊の分身をどんどん増やそう！</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-badge">2</div>
+                    <span class="step-img">🛡️</span>
+                    <h3>攻撃に備える</h3>
+                    <p>ブロックを増やして、<br>悪夢のカウントが終わるまで耐えよう。</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-badge">3</div>
+                    <span class="step-img">💤</span>
+                    <h3>眠らせて勝利</h3>
+                    <p>悪夢が指定の数だけ羊を数え、<br>眠りについたらクリア！</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- キャラクター -->
+    <!-- カードギャラリー -->
+    <section id="cards" class="bg-white">
+        <div class="container">
+            <h2 class="section-title" data-en="CARDS">カードギャラリー</h2>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
+                <img src="assets/images/card_clone.png" loading="lazy" alt="Clone Card" style="width:220px;height:auto;border-radius:16px;box-shadow:var(--shadow-soft);">
+                <img src="assets/images/card_headbutt.png" loading="lazy" alt="Headbutt Card" style="width:220px;height:auto;border-radius:16px;box-shadow:var(--shadow-soft);">
+                <img src="assets/images/card_mohumohuguard.png" loading="lazy" alt="Guard Card" style="width:220px;height:auto;border-radius:16px;box-shadow:var(--shadow-soft);">
+            </div>
+        </div>
+    </section>
+
+    <!-- Visual gallery: stacked slides that flow vertically like other sections -->
+    <section id="visuals" class="visual-section bg-white">
+        <div class="visual-gallery" aria-label="ホームページ ビジュアルギャラリー">
+            <div class="visual-slide" style="background-image: url('assets/homepage用イラスト/資料1.png');">
+                <div class="visual-overlay" aria-hidden="true"></div>
+            </div>
+            <div class="wave-divider">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M0,0 C150,100 350,100 500,50 C650,0 850,0 1000,50 C1150,100 1200,120 1200,120 L1200,0 L0,0 Z" class="shape-fill"></path>
+                </svg>
+            </div>
+
+            <div class="visual-slide" style="background-image: url('assets/homepage用イラスト/資料2.png');">
+                <div class="visual-overlay" aria-hidden="true"></div>
+            </div>
+            <div class="wave-divider">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M0,0 C150,100 350,100 500,50 C650,0 850,0 1000,50 C1150,100 1200,120 1200,120 L1200,0 L0,0 Z" class="shape-fill"></path>
+                </svg>
+            </div>
+
+            <div class="visual-slide" style="background-image: url('assets/homepage用イラスト/資料3.png');">
+                <div class="visual-overlay" aria-hidden="true"></div>
+            </div>
+            <div class="wave-divider">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M0,0 C150,100 350,100 500,50 C650,0 850,0 1000,50 C1150,100 1200,120 1200,120 L1200,0 L0,0 Z" class="shape-fill"></path>
+                </svg>
+            </div>
+
+            <div class="visual-slide" style="background-image: url('assets/homepage用イラスト/資料4.png');">
+                <div class="visual-overlay" aria-hidden="true"></div>
+            </div>
+            <div class="wave-divider">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M0,0 C150,100 350,100 500,50 C650,0 850,0 1000,50 C1150,100 1200,120 1200,120 L1200,0 L0,0 Z" class="shape-fill"></path>
+                </svg>
+            </div>
+
+            <div class="visual-slide" style="background-image: url('assets/homepage用イラスト/資料5.png');">
+                <div class="visual-overlay" aria-hidden="true"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="characters" class="bg-white">
+        <!-- 上部の波 -->
+        <div class="wave-divider wave-top" style="transform: rotate(180deg); top: -60px;">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill" fill="#FFFBF0"></path>
+            </svg>
+        </div>
+
+        <div class="container">
+            <h2 class="section-title" data-en="CHARACTERS">夢の世界の羊たち</h2>
+            <div class="char-scroll">
+                <!-- No.1 -->
+                <div class="char-card">
+                    <div class="char-visual"><img src="assets/images/Normal.png" loading="lazy" alt="Normal Sheep" style="width:140px;height:auto;"></div>
+                    <div class="char-info">
+                        <span class="char-name">Normal Sheep</span>
+                        <span class="char-desc">すべての基本</span>
+                    </div>
+                </div>
+                <!-- No.2 -->
+                <div class="char-card">
+                    <div class="char-visual"><img src="assets/images/Knight.png" loading="lazy" alt="Soldier Sheep" style="width:140px;height:auto;"></div>
+                    <div class="char-info">
+                        <span class="char-name">Soldier Sheep</span>
+                        <span class="char-desc">頼れる守護者</span>
+                    </div>
+                </div>
+                <!-- No.3 -->
+                <div class="char-card">
+                    <div class="char-visual"><img src="assets/images/Baby.png" loading="lazy" alt="Baby Sheep" style="width:140px;height:auto;"></div>
+                    <div class="char-info">
+                        <span class="char-name">Baby Sheep</span>
+                        <span class="char-desc">小さな勇気</span>
+                    </div>
+                </div>
+                <!-- No.4 -->
+                <div class="char-card">
+                    <div class="char-visual"><img src="assets/images/Wizard.png" loading="lazy" alt="Wizard Sheep" style="width:140px;height:auto;"></div>
+                    <div class="char-info">
+                        <span class="char-name">Wizard Sheep</span>
+                        <span class="char-desc">魔法の使い手</span>
+                    </div>
+                </div>
+                <!-- More -->
+                <div class="char-card">
+                    <div class="char-visual"><img src="assets/images/Default.png" loading="lazy" alt="Unique Sheeps" style="width:140px;height:auto;"></div>
+                    <div class="char-info">
+                        <span class="char-name">Unique Sheeps</span>
+                        <span class="char-desc">個性豊かな仲間たち</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 制作者 -->
+    <section id="creators">
+        <div class="container">
+            <h2 class="section-title" data-en="CREATORS">制作者紹介</h2>
+            <div class="dev-wrapper">
+                <div class="dev-grid">
+                    <!-- 制作者 1 -->
+                    <div class="dev-person">
+                        <div class="dev-icon" style="background-image: url('assets/images/app_icon.jpg'); background-size:cover;">
+                            <!-- アイコン画像をここに設定 -->
+                        </div>
+                        <span class="dev-role">Game Design & Program</span>
+                        <span class="dev-name">aoiro</span>
+                        
+                        <!-- リンクは後で設定: href="https://twitter.com/aoiro..." -->
+                        <a href="#" target="_blank" class="twitter-btn">
+                            <i class="fa-brands fa-x-twitter"></i> Follow
+                        </a>
+                    </div>
+
+                    <!-- 制作者 2 -->
+                    <div class="dev-person">
+                        <div class="dev-icon" style="background-image: url('assets/images/Default.png'); background-size:cover;">
+                            <!-- アイコン画像をここに設定 -->
+                        </div>
+                        <span class="dev-role">Illustration</span>
+                        <span class="dev-name">ちょもらんま</span>
+
+                        <!-- リンクは後で設定: href="https://twitter.com/chomo..." -->
+                        <a href="#" target="_blank" class="twitter-btn">
+                            <i class="fa-brands fa-x-twitter"></i> Follow
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <small>&copy; 2025 ラララムプロジェクト. All Rights Reserved.</small>
+    </footer>
+
+</body>
+</html>

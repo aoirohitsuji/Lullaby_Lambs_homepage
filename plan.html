@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>企画書 - ラララム</title>
+  <link rel="icon" href="assets/images/app_icon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    body{font-family:'Zen Maru Gothic',sans-serif;background:#FFFBF0;color:#5D5550;margin:0;padding:24px}
+    .container{max-width:980px;margin:40px auto;background:#fff;padding:28px;border-radius:16px;box-shadow:0 10px 30px -8px rgba(0,0,0,0.12)}
+    a.home{display:inline-block;margin-bottom:18px;color:#8CD790;font-weight:900}
+    pre{white-space:pre-wrap;word-wrap:break-word}
+    img{max-width:100%}
+    /* basic styles for rendered markdown */
+    .markdown h1{font-size:2rem;margin:0 0 12px}
+    .markdown h2{font-size:1.6rem;margin:18px 0 8px}
+    .markdown p{line-height:1.8;color:#444}
+    .markdown ul{padding-left:1.2rem}
+    .markdown code{background:#f5f5f5;padding:2px 6px;border-radius:4px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a class="home" href="index.html">← トップに戻る</a>
+    <div id="content">読み込み中…</div>
+  </div>
+
+  <!-- marked.js for Markdown -> HTML -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    (async function(){
+      try{
+        const res = await fetch('../official_version/docs/企画書.md');
+        if(!res.ok){ document.getElementById('content').textContent = '企画書を取得できませんでした。'; return; }
+        const md = await res.text();
+        const html = marked.parse(md);
+        const wrapper = document.createElement('div');
+        wrapper.className = 'markdown';
+        wrapper.innerHTML = html;
+        const content = document.getElementById('content');
+        content.innerHTML = '';
+        content.appendChild(wrapper);
+      }catch(e){
+        document.getElementById('content').textContent = 'エラー: ' + e.message;
+      }
+    })();
+  </script>
+</body>
+</html>
