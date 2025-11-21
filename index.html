@@ -129,6 +129,16 @@
             border: 2px solid var(--c-primary);
         }
 
+        /* Site logo (replaces text H1) */
+        .site-logo {
+            display: block;
+            margin: 0 auto 8px;
+            width: clamp(220px, 40vw, 520px);
+            height: auto;
+            image-rendering: -webkit-optimize-contrast;
+            filter: drop-shadow(0 12px 30px rgba(0,0,0,0.12));
+        }
+
         h1.title {
             font-size: clamp(3.5rem, 10vw, 7rem);
             font-weight: 900;
@@ -528,11 +538,11 @@
         <div class="hero-bg-circle c3"></div>
 
         <div class="container hero-content">
-            <div class="tagline">✨ 可愛いイラストのローグライクカードゲーム</div>
-            <h1 class="title">ラララム</h1>
+            <!-- Replace text title with project logo. If `logo.png` is missing, fall back to `app_icon.jpg`. -->
+            <img src="assets/images/logo.png" alt="ラララム" class="site-logo" loading="eager" onerror="this.onerror=null;this.src='assets/images/app_icon.jpg';">
             <p class="hero-desc">
-                羊の大冒険がはじまる。<br>
-                毎夜変化する夢の世界で、悪夢に立ち向かおう。
+                増えて眠らす！羊の大冒険！<br>
+                悪夢が数える分身を増やし、悪夢が眠りにつくまで攻撃から逃げ切ろう！
             </p>
             
             <div class="action-area">
@@ -541,7 +551,7 @@
                     
                     <!-- 1. Android APK (メイン) -->
                     <!-- リンクは後で設定: href="ここにAPKのURL" -->
-                    <a href="../official_version/builds/lullaby_lambs.apk" class="btn btn-android" aria-label="Android 体験版 APK をダウンロード">
+                    <a href="https://drive.google.com/drive/folders/17Jr-L5BBhnIP9V7gZTK7po8zbQE8Qdcr?usp=drive_link" class="btn btn-android" aria-label="Android 体験版 APK をダウンロード" target="_blank" rel="noopener noreferrer">
                         <i class="fa-brands fa-android"></i>
                         体験版APK
                     </a>
@@ -549,7 +559,7 @@
                     <!-- 2. Web版 (サブ) -->
                     <!-- リンクは後で設定: href="ここにWeb版のURL" -->
                     <div class="btn-sub-wrap">
-                        <a href="../official_version/web/index.html" class="btn btn-sub" aria-label="ブラウザで遊ぶ（非推奨）">
+                        <a href="https://shellle.github.io/test/" class="btn btn-sub" aria-label="ブラウザで遊ぶ（非推奨）" target="_blank" rel="noopener noreferrer">
                             <span style="display:flex;align-items:center;gap:10px;">
                                 <i class="fa-solid fa-gamepad"></i>
                                 <span>ブラウザで遊ぶ</span>
@@ -560,9 +570,9 @@
 
                     <!-- 3. 企画書 (サブ) -->
                     <!-- リンクは後で設定: href="ここにPDFのURL" -->
-                    <a href="plan.html" class="btn btn-sub" aria-label="企画書を見る">
+                    <a href="https://drive.google.com/file/d/1LG3ziD8GRdjCt0CIr96SGUc2hTeuz8f_/view?usp=sharing" class="btn btn-sub" aria-label="紹介PDFを見る" target="_blank" rel="noopener noreferrer">
                         <i class="fa-solid fa-file-pdf"></i>
-                        企画書を見る
+                        紹介PDFを見る
                     </a>
 
                 </div>
@@ -607,13 +617,13 @@
             <div class="step-list">
                 <div class="step-card">
                     <div class="step-badge">1</div>
-                    <span class="step-img">🃏</span>
+                    <img src="assets/images/card_clone.png" loading="lazy" alt="分身カード" class="step-img" style="width:96px;height:auto;margin:20px auto;display:block;">
                     <h3>分身を増やす</h3>
                     <p>カードを使って、<br>羊の分身をどんどん増やそう！</p>
                 </div>
                 <div class="step-card">
                     <div class="step-badge">2</div>
-                    <span class="step-img">🛡️</span>
+                    <img src="assets/images/card_mohumohuguard.png" loading="lazy" alt="守りカード" class="step-img" style="width:96px;height:auto;margin:20px auto;display:block;">
                     <h3>攻撃に備える</h3>
                     <p>ブロックを増やして、<br>悪夢のカウントが終わるまで耐えよう。</p>
                 </div>
@@ -640,50 +650,7 @@
         </div>
     </section>
 
-    <!-- Visual gallery: stacked slides that flow vertically like other sections -->
-    <section id="visuals" class="visual-section bg-white">
-        <div class="visual-gallery" aria-label="ホームページ ビジュアルギャラリー">
-            <div class="visual-slide" style="background-image: url('assets/homepage用イラスト/資料1.png');">
-                <div class="visual-overlay" aria-hidden="true"></div>
-            </div>
-            <div class="wave-divider">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M0,0 C150,100 350,100 500,50 C650,0 850,0 1000,50 C1150,100 1200,120 1200,120 L1200,0 L0,0 Z" class="shape-fill"></path>
-                </svg>
-            </div>
 
-            <div class="visual-slide" style="background-image: url('assets/homepage用イラスト/資料2.png');">
-                <div class="visual-overlay" aria-hidden="true"></div>
-            </div>
-            <div class="wave-divider">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M0,0 C150,100 350,100 500,50 C650,0 850,0 1000,50 C1150,100 1200,120 1200,120 L1200,0 L0,0 Z" class="shape-fill"></path>
-                </svg>
-            </div>
-
-            <div class="visual-slide" style="background-image: url('assets/homepage用イラスト/資料3.png');">
-                <div class="visual-overlay" aria-hidden="true"></div>
-            </div>
-            <div class="wave-divider">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M0,0 C150,100 350,100 500,50 C650,0 850,0 1000,50 C1150,100 1200,120 1200,120 L1200,0 L0,0 Z" class="shape-fill"></path>
-                </svg>
-            </div>
-
-            <div class="visual-slide" style="background-image: url('assets/homepage用イラスト/資料4.png');">
-                <div class="visual-overlay" aria-hidden="true"></div>
-            </div>
-            <div class="wave-divider">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M0,0 C150,100 350,100 500,50 C650,0 850,0 1000,50 C1150,100 1200,120 1200,120 L1200,0 L0,0 Z" class="shape-fill"></path>
-                </svg>
-            </div>
-
-            <div class="visual-slide" style="background-image: url('assets/homepage用イラスト/資料5.png');">
-                <div class="visual-overlay" aria-hidden="true"></div>
-            </div>
-        </div>
-    </section>
 
     <section id="characters" class="bg-white">
         <!-- 上部の波 -->
@@ -701,7 +668,7 @@
                     <div class="char-visual"><img src="assets/images/Normal.png" loading="lazy" alt="Normal Sheep" style="width:140px;height:auto;"></div>
                     <div class="char-info">
                         <span class="char-name">Normal Sheep</span>
-                        <span class="char-desc">すべての基本</span>
+                        <span class="char-desc">無限の可能性</span>
                     </div>
                 </div>
                 <!-- No.2 -->
@@ -748,28 +715,26 @@
                 <div class="dev-grid">
                     <!-- 制作者 1 -->
                     <div class="dev-person">
-                        <div class="dev-icon" style="background-image: url('assets/images/app_icon.jpg'); background-size:cover;">
-                            <!-- アイコン画像をここに設定 -->
+                        <div class="dev-icon" style="background-image: url('assets/images/aoiro.png'); background-size:cover;">
                         </div>
                         <span class="dev-role">Game Design & Program</span>
                         <span class="dev-name">aoiro</span>
                         
-                        <!-- リンクは後で設定: href="https://twitter.com/aoiro..." -->
-                        <a href="#" target="_blank" class="twitter-btn">
+                        <!-- Twitter/X: aoiro_lemonade -->
+                        <a href="https://x.com/aoiro_lemonade" target="_blank" rel="noopener noreferrer" class="twitter-btn">
                             <i class="fa-brands fa-x-twitter"></i> Follow
                         </a>
                     </div>
 
                     <!-- 制作者 2 -->
                     <div class="dev-person">
-                        <div class="dev-icon" style="background-image: url('assets/images/Default.png'); background-size:cover;">
-                            <!-- アイコン画像をここに設定 -->
+                        <div class="dev-icon" style="background-image: url('assets/images/chomoranma.png'); background-size:cover;">
                         </div>
                         <span class="dev-role">Illustration</span>
                         <span class="dev-name">ちょもらんま</span>
 
-                        <!-- リンクは後で設定: href="https://twitter.com/chomo..." -->
-                        <a href="#" target="_blank" class="twitter-btn">
+                        <!-- Twitter/X: ch0_chhh000 -->
+                        <a href="https://x.com/ch0_chhh000" target="_blank" rel="noopener noreferrer" class="twitter-btn">
                             <i class="fa-brands fa-x-twitter"></i> Follow
                         </a>
                     </div>
@@ -779,7 +744,7 @@
     </section>
 
     <footer>
-        <small>&copy; 2025 ラララムプロジェクト. All Rights Reserved.</small>
+        <small> 2025 ラララムプロジェクト. </small>
     </footer>
 
 </body>
